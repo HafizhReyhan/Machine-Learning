@@ -1,0 +1,26 @@
+Evaluasi Model Logistic Regression dengan Persamaan Matematis
+
+Akurasi (Accuracy)
+Akurasi mengukur seberapa sering model membuat prediksi yang benar dibandingkan dengan total prediksi yang dilakukan.
+Rumus:
+Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+Presisi (Precision)
+Presisi mengukur berapa banyak prediksi positif yang benar dibandingkan dengan semua yang diprediksi positif.
+Rumus:
+Precision = TP / (TP + FP)
+
+Recall (Sensitivity)
+Recall mengukur seberapa baik model menemukan semua sampel positif yang benar.
+Rumus:
+Recall = TP / (TP + FN)
+
+F1-Score
+F1-Score adalah rata-rata harmonik dari Precision dan Recall, yang memberikan keseimbangan antara keduanya.
+Rumus:
+F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
+
+AUC - ROC (Area Under Curve)
+AUC mengukur seberapa baik model dapat membedakan antara kelas positif dan negatif di berbagai threshold probabilitas.
+Rumus:
+AUC = ∫ TPR d(FPR)
