@@ -1,1 +1,8 @@
+MSE (Mean Squared ErrorMean Squared Error)
+    Mengukur seberapa jauh (kuadrat) prediksi model dari nilai sebenarnya secara rata-rata.
 
+RMSE (Root Mean Squared ErrorRoot Mean Squared Error)
+    Bentuk akar dari MSE, memiliki satuan yang sama dengan target aslinya, memudahkan interpretasi error.
+
+R2 (Coefficient of Determination)
+    Mengukur seberapa besar proporsi variasi data yang bisa dijelaskan oleh model. Nilai mendekati 1 menandakan model yang bagus.
