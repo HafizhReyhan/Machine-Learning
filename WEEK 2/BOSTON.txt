@@ -1,0 +1,7 @@
+BOSTON
+
+Berdasarkan serangkaian eksperimen di atas:
+
+    Seleksi Fitur: Untuk model Regresi Linear sederhana, menggunakan semua fitur yang ada memberikan hasil terbaik dibandingkan mencoba menguranginya dengan metode standar.
+    Scaling: Meskipun tidak berdampak pada akurasi Regresi Linear, Robust Scaling adalah praktik terbaik untuk dataset ini karena adanya outlier, yang akan sangat relevan jika menggunakan model yang lebih kompleks.
+    Discretization: Mengubah fitur kontinu menjadi kategori justru sedikit memperburuk performa, menandakan bahwa model dapat lebih baik memanfaatkan gradasi nilai asli daripada pengelompokan kasar.
