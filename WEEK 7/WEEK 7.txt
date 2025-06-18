@@ -1,0 +1,81 @@
+WEEK 7
+
+ Matriks Evaluasi dan Persamaan Matematika
+
+Berikut adalah penjelasan untuk setiap metrik evaluasi yang digunakan:
+
+a. Mean Squared Error (MSE)
+
+MSE menghitung rata-rata dari kuadrat selisih antara nilai prediksi dan nilai aktual. Metrik ini memberikan "bobot" yang lebih besar pada kesalahan yang besar karena adanya proses kuadrat. Nilai MSE yang lebih kecil menunjukkan performa model yang lebih baik.
+
+Persamaan Matematika:
+MSE=n1​i=1∑n​(yi​−y^​i​)2
+
+Penjelasan:
+
+    n: Jumlah total data poin.
+    yi​: Nilai aktual dari data ke-i.
+    y^​i​: Nilai yang diprediksi oleh model untuk data ke-i.
+    (yi​−y^​i​): Selisih atau error antara nilai aktual dan prediksi.
+
+b. Root Mean Squared Error (RMSE)
+
+RMSE adalah akar kuadrat dari MSE. Keuntungan utama dari RMSE adalah hasilnya memiliki unit yang sama dengan variabel target, sehingga lebih mudah untuk diinterpretasikan. Sama seperti MSE, nilai RMSE yang lebih rendah menandakan model yang lebih baik.
+
+c. R-squared (R2) atau Koefisien Determinasi
+
+R2 adalah metrik yang mengukur seberapa baik model regresi "cocok" dengan data. Nilai R2 menunjukkan proporsi varians dari variabel dependen (target) yang dapat diprediksi dari variabel independen (fitur). Nilainya berkisar antara 0 dan 1. Nilai yang mendekati 1 menunjukkan bahwa model dapat menjelaskan sebagian besar variabilitas data, yang berarti performanya baik.
+
+WEEK 7 B
+Matriks Evaluasi Mana yang Terbaik?
+
+Dalam konteks diagnosis medis seperti penyakit jantung, tidak ada satu matriks yang "terbaik" secara absolut; pilihan tergantung pada tujuan klinis. Namun, metrik yang paling krusial di sini adalah Recall (Sensitivitas).
+
+Mengapa Recall Penting?
+
+    Recall mengukur kemampuan model untuk mengidentifikasi semua kasus positif yang sebenarnya. Dalam kasus ini, Recall menjawab pertanyaan: "Dari semua pasien yang benar-benar menderita penyakit jantung, berapa persen yang berhasil diidentifikasi oleh model?"
+    Konsekuensi Kesalahan:
+        False Negative (Gagal Mendeteksi Penyakit): Model memprediksi pasien sehat, padahal sebenarnya ia sakit. Ini sangat berbahaya karena pasien tidak akan menerima perawatan yang dibutuhkan, yang bisa berakibat fatal.
+        False Positive (Alarm Palsu): Model memprediksi pasien sakit, padahal sebenarnya ia sehat. Ini memang merugikan (misalnya, menyebabkan kecemasan dan biaya tes lanjutan), tetapi konsekuensinya jauh lebih ringan daripada False Negative.
+    Kesimpulan: Karena tujuan utama adalah untuk tidak melewatkan pasien yang sakit, kita harus memaksimalkan Recall. Model Boosting dengan Recall 0.93 jauh lebih baik dalam hal ini, karena berhasil mengidentifikasi 93% dari semua pasien yang benar-benar sakit pada data uji.
+
+Meskipun AUC memberikan gambaran umum yang baik tentang performa model, dan F1-Score menyeimbangkan antara Precision dan Recall, dalam skenario medis yang kritis, meminimalkan False Negative melalui Recall yang tinggi adalah prioritas utama.
+
+1. Akurasi (Accuracy)
+
+Mengukur proporsi prediksi yang benar (TP dan TN) dari keseluruhan data.
+
+Persamaan:
+Akurasi=TP+TN+FP+FNTP+TN​
+Keterbatasan: Akurasi bisa menyesatkan jika jumlah data antar kelas tidak seimbang.
+2. Presisi (Precision)
+
+Mengukur tingkat ketepatan dari prediksi positif. Dari semua yang diprediksi sakit, berapa persen yang benar-benar sakit?
+
+Persamaan:
+Presisi=TP+FPTP​
+Kegunaan: Penting ketika biaya False Positive tinggi (misalnya, dalam kampanye marketing yang mahal).
+3. Recall (Sensitivity atau True Positive Rate)
+
+Mengukur kemampuan model untuk menemukan semua kasus positif yang ada.
+
+Persamaan:
+Recall=TP+FNTP​
+Kegunaan: Sangat penting ketika biaya False Negative tinggi, seperti pada diagnosis medis.
+4. F1-Score
+
+Rata-rata harmonik dari Presisi dan Recall. Metrik ini memberikan keseimbangan antara keduanya.
+
+Persamaan:
+F1-Score=2×Presisi+RecallPresisi×Recall​
+Kegunaan: Berguna ketika Anda ingin mencari keseimbangan antara meminimalkan False Positive dan False Negative.
+5. Kurva ROC dan AUC
+
+    Kurva ROC (Receiver Operating Characteristic): Adalah plot yang menggambarkan performa model klasifikasi pada semua ambang batas klasifikasi. Kurva ini memetakan True Positive Rate (Recall) terhadap False Positive Rate.
+        False Positive Rate (FPR): Proporsi kasus negatif yang salah diidentifikasi sebagai positif. FPR=FP+TNFP​
+    AUC (Area Under the Curve): Mengukur keseluruhan area di bawah kurva ROC.
+        AUC = 1: Model sempurna.
+        AUC = 0.5: Model tidak lebih baik dari tebakan acak.
+        AUC &lt; 0.5: Model lebih buruk dari tebakan acak.
+
+AUC sangat berguna karena memberikan ukuran tunggal yang merangkum kemampuan model dalam membedakan antar kelas tanpa bergantung pada ambang batas klasifikasi tertentu.
