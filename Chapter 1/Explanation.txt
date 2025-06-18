@@ -1,1 +1,60 @@
+Apa itu Machine Learning (ML)?
 
+ML adalah ilmu yang memprogram komputer agar dapat belajar dari data tanpa diprogram secara eksplisit. Tujuannya adalah untuk meningkatkan kinerja (Performance) dalam suatu tugas (Task) melalui pengalaman (Experience). Contohnya adalah filter spam yang belajar mengenali email spam (Tugas) dari contoh-contoh email yang diberikan (Pengalaman).
+
+Mengapa Menggunakan ML?
+
+ML sangat berguna untuk:
+
+    Masalah yang terlalu kompleks untuk diselesaikan dengan pendekatan tradisional atau memerlukan banyak aturan yang harus disetel secara manual.
+
+Sistem yang perlu beradaptasi dengan lingkungan yang terus berubah.
+Mendapatkan wawasan dari kumpulan data yang besar dan kompleks (disebut juga data mining).
+
+Jenis-Jenis Sistem Machine Learning
+
+Sistem ML dapat diklasifikasikan berdasarkan beberapa kriteria:
+
+1. Tingkat Supervisi:
+
+    Supervised Learning: Algoritma dilatih menggunakan data yang sudah diberi label (solusi yang diinginkan sudah ada). Tugas utamanya adalah klasifikasi (memprediksi kategori) dan regresi (memprediksi nilai numerik).
+
+Unsupervised Learning: Algoritma dilatih menggunakan data yang tidak berlabel. Contohnya termasuk clustering (mengelompokkan data serupa) , anomaly detection (mendeteksi data ganjil) , dan dimensionality reduction (menyederhanakan data).
+Semisupervised Learning: Menggunakan data yang sebagian besar tidak berlabel dengan sedikit data berlabel.
+Reinforcement Learning: Sebuah agent belajar dengan berinteraksi dengan environment. Agent melakukan tindakan dan menerima rewards (penghargaan) atau penalties (hukuman) untuk belajar menemukan strategi terbaik (policy).
+
+2. Kemampuan Belajar (Batch vs. Online):
+
+    Batch Learning: Sistem harus dilatih menggunakan semua data yang tersedia sekaligus (offline). Sistem tidak dapat belajar secara bertahap.
+
+Online Learning: Sistem dilatih secara bertahap dengan memberinya data secara sekuensial atau dalam mini-batch kecil. Ini cocok untuk data yang terus berubah atau dataset yang sangat besar.
+
+3. Metode Generalisasi (Instance-Based vs. Model-Based):
+
+    Instance-Based Learning: Sistem mempelajari contoh-contoh data dengan menghafalnya, lalu membuat prediksi untuk data baru dengan mengukur kesamaannya dengan contoh yang telah dipelajari.
+
+Model-Based Learning: Sistem membangun sebuah model dari contoh-contoh data, lalu menggunakan model tersebut untuk membuat prediksi.
+
+Tantangan Utama dalam ML
+
+Tantangan utama dapat dibagi menjadi masalah data dan masalah algoritma.
+
+    Masalah Data:
+        Kekurangan data pelatihan: Sebagian besar algoritma ML membutuhkan banyak data untuk bekerja dengan baik.
+
+Data pelatihan yang tidak representatif: Data harus mewakili kasus-kasus baru yang ingin digeneralisasi.
+Data berkualitas buruk: Kesalahan, outlier, dan noise dalam data akan menyulitkan sistem untuk mendeteksi pola.
+Fitur yang tidak relevan: Kualitas model bergantung pada fitur yang digunakan (feature engineering).
+
+Masalah Algoritma:
+
+    Overfitting: Model bekerja dengan sangat baik pada data pelatihan, tetapi tidak dapat menggeneralisasi dengan baik pada data baru. Ini terjadi ketika model terlalu kompleks.
+
+Underfitting: Model terlalu sederhana untuk mempelajari struktur data yang mendasarinya.
+
+Pengujian dan Validasi
+
+    Training Set: Data yang digunakan untuk melatih model.
+    Test Set: Data yang disisihkan untuk mengestimasi generalization error (kesalahan pada data baru) setelah model selesai dilatih.
+
+Validation Set: Digunakan untuk membandingkan model dan menyetel hyperparameter untuk memilih model terbaik.
