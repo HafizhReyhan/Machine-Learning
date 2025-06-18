@@ -1,0 +1,34 @@
+WEEK 4
+
+a. Akurasi (Accuracy)
+
+Mengukur proporsi total prediksi yang benar dari keseluruhan data.
+
+Persamaan:
+Akurasi=TP+TN+FP+FNTP+TN​
+Meskipun umum digunakan, akurasi bisa menyesatkan jika dataset tidak seimbang.
+b. Presisi (Precision)
+
+Menjawab pertanyaan: "Dari semua yang kita prediksi akan melakukan residivisme, berapa persen yang benar-benar melakukannya?"
+
+Persamaan:
+Presisi=TP+FPTP​
+Presisi tinggi penting ketika biaya dari False Positive tinggi.
+c. Recall (Sensitivity / True Positive Rate)
+
+Menjawab pertanyaan: "Dari semua orang yang seharusnya melakukan residivisme, berapa persen yang berhasil kita prediksi?"
+
+Persamaan:
+Recall=TP+FNTP​
+Recall sangat penting dalam skenario di mana melewatkan kasus positif (False Negative) sangat merugikan.
+d. F1-Score
+
+Rata-rata harmonik dari Presisi dan Recall. Metrik ini memberikan keseimbangan antara keduanya.
+
+Persamaan:
+F1-Score=2×Presisi+RecallPresisi×Recall​
+F1-Score berguna ketika Anda ingin mencari keseimbangan antara meminimalkan False Positive dan False Negative.
+e. AUC dan Kurva ROC
+
+    Kurva ROC adalah grafik yang memvisualisasikan performa model dengan memplot Recall (True Positive Rate) melawan False Positive Rate pada berbagai ambang batas klasifikasi.
+    AUC (Area Under the Curve) adalah area di bawah kurva ROC. Nilai AUC berkisar dari 0 hingga 1, di mana 1 adalah skor sempurna dan 0.5 berarti model tidak lebih baik dari tebakan acak. AUC mengukur kemampuan model secara keseluruhan untuk membedakan antara kelas positif dan negatif.
