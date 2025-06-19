@@ -1,0 +1,67 @@
+Chapter 14
+
+1. Arsitektur Korteks Visual
+
+Eksperimen oleh David Hubel dan Torsten Wiesel pada tahun 1950-an dan 1960-an memberikan wawasan penting tentang cara kerja korteks visual.  Mereka menemukan bahwa:
+
+    Banyak neuron di korteks visual memiliki bidang reseptif lokal (local receptive field) yang kecil, artinya mereka hanya bereaksi terhadap rangsangan visual di area terbatas. 
+
+Beberapa neuron bereaksi hanya pada pola sederhana seperti garis horizontal atau vertikal.
+Neuron di lapisan yang lebih tinggi bereaksi terhadap pola yang lebih kompleks, yang merupakan kombinasi dari pola tingkat rendah.
+
+Studi ini menginspirasi arsitektur CNN, yang mampu mendeteksi pola kompleks di area mana pun dari bidang visual.
+2. Convolutional Layers
+
+Blok bangunan terpenting dari sebuah CNN adalah convolutional layer. Tidak seperti DNN biasa, neuron di convolutional layer pertama tidak terhubung ke setiap piksel dalam gambar input, melainkan hanya ke piksel dalam bidang reseptif mereka. 
+
+    Filter (atau Kernel): Bobot sebuah neuron dapat direpresentasikan sebagai gambar kecil seukuran bidang reseptif. Lapisan yang penuh dengan neuron yang menggunakan filter yang sama akan menghasilkan feature map, yang menyoroti area dalam gambar yang paling mengaktifkan filter tersebut. 
+
+Stacking Multiple Feature Maps: Sebuah convolutional layer biasanya menerapkan beberapa filter dan menghasilkan satu feature map per filter, sehingga outputnya lebih akurat direpresentasikan dalam 3D.
+Padding: Untuk menjaga agar dimensi spasial (tinggi dan lebar) output sama dengan input, seringkali ditambahkan nol di sekitar input. Ini disebut zero padding.
+
+    padding="same": Menggunakan zero padding jika perlu. Ukuran output sama dengan ukuran input jika stride=1. 
+
+padding="valid": Tidak menggunakan padding sama sekali. Lapisan mungkin mengabaikan beberapa baris dan kolom di bagian bawah dan kanan gambar input.
+
+Stride: Pergeseran dari satu bidang reseptif ke bidang reseptif berikutnya. Stride yang lebih besar akan mengurangi dimensi spasial output.
+3. Pooling Layers
+
+Tujuan dari pooling layers adalah untuk melakukan subsample (yaitu, menyusutkan) gambar input untuk mengurangi beban komputasi, penggunaan memori, dan jumlah parameter, sehingga membatasi risiko overfitting.
+
+    Max Pooling: Jenis pooling yang paling umum. Ia hanya mengambil nilai input maksimum di setiap bidang reseptif dan membuang input lainnya. Ini juga memberikan tingkat invariance (kekebalan) terhadap translasi kecil. 
+
+Average Pooling: Bekerja seperti max pooling, tetapi menghitung rata-rata alih-alih maksimum.
+Global Average Pooling: Menghitung rata-rata dari setiap feature map secara keseluruhan. Ini berguna sebagai lapisan output.
+4. Arsitektur CNN Terkenal
+
+Selama bertahun-tahun, berbagai arsitektur CNN telah dikembangkan, masing-masing dengan inovasi penting.
+
+    LeNet-5 (1998): Arsitektur CNN klasik yang banyak digunakan untuk mengenali angka tulisan tangan. 
+
+AlexNet (2012): Pemenang tantangan ILSVRC 2012. Jauh lebih besar dan lebih dalam dari LeNet-5. Inovasinya termasuk menumpuk convolutional layers secara langsung, menggunakan aktivasi ReLU, dan menggunakan teknik regularisasi seperti dropout dan data augmentation.
+GoogLeNet (2014): Pemenang ILSVRC 2014. Inovasi utamanya adalah inception module, yang memungkinkan jaringan menjadi jauh lebih dalam dengan parameter yang lebih sedikit. Modul ini menggunakan filter dengan ukuran berbeda secara paralel untuk menangkap pola pada berbagai skala.
+ResNet (Residual Network) (2015): Pemenang ILSVRC 2015. Kunci untuk dapat melatih jaringan yang sangat dalam (hingga 152 lapisan) adalah penggunaan skip connections (atau shortcut connections). Ini memungkinkan jaringan untuk mempelajari residual dari fungsi target, yang mempercepat pelatihan secara signifikan.
+Xception (2016): Mengganti inception module dengan depthwise separable convolution layers, yang memisahkan pemodelan pola spasial dan pola antar-channel, sehingga lebih efisien dan seringkali berkinerja lebih baik.
+SENet (Squeeze-and-Excitation Network) (2017): Pemenang ILSVRC 2017. Arsitektur ini menambahkan SE block ke setiap unit arsitektur yang ada (seperti ResNet atau Inception). SE block menganalisis output unit dan belajar untuk recalibrate (menyesuaikan kembali) feature map, menekan fitur yang tidak relevan dan memperkuat yang relevan.
+
+5. Menggunakan Model Pretrained dari Keras
+
+Keras menyediakan banyak arsitektur standar yang sudah dilatih sebelumnya pada dataset ImageNet di dalam paket keras.applications.
+6. Transfer Learning
+
+Jika Anda ingin membangun classifier gambar tetapi tidak memiliki cukup data pelatihan, Anda bisa menggunakan kembali lapisan bawah dari model yang sudah dilatih (pretrained model). 
+
+Proses Transfer Learning:
+
+    Muat model dasar (misalnya, Xception) tanpa lapisan atasnya (include_top=False).
+    Bekukan lapisan-lapisan dasar agar bobotnya tidak berubah selama pelatihan awal (layer.trainable = False).
+    Tambahkan lapisan atas Anda sendiri (misalnya, GlobalAveragePooling2D diikuti oleh Dense untuk klasifikasi).
+    Latih model untuk beberapa epoch.
+    Buka kembali beberapa atau semua lapisan dasar (layer.trainable = True) dan lanjutkan pelatihan dengan learning rate yang jauh lebih rendah untuk menyempurnakan (fine-tune) bobot.
+
+7. Deteksi Objek dan Segmentasi Semantik
+
+    Klasifikasi dan Lokalisasi: Selain mengklasifikasikan objek, kita bisa menambahkan output head kedua ke CNN untuk memprediksi bounding box (sebuah tugas regresi). Metrik yang umum digunakan adalah Intersection over Union (IoU). 
+
+Deteksi Objek: Tugas mengklasifikasikan dan melokalisasi beberapa objek dalam satu gambar. Teknik modern seperti YOLO (You Only Look Once) menggunakan Fully Convolutional Networks (FCNs) untuk melakukan ini secara efisien dalam satu kali proses.
+Segmentasi Semantik: Tugas mengklasifikasikan setiap piksel dalam gambar. Arsitektur FCN modern menggunakan transposed convolutional layers untuk melakukan upsampling dan mengembalikan resolusi spasial yang hilang selama pooling, seringkali dengan skip connections untuk memulihkan detail dari lapisan yang lebih rendah. 

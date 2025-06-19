@@ -1,0 +1,49 @@
+Chapter 7
+
+1. Voting Classifiers
+
+Cara sederhana untuk membuat classifier yang lebih baik adalah dengan menggabungkan prediksi dari setiap classifier dan memilih kelas yang mendapatkan suara terbanyak. Ini disebut hard voting classifier.
+
+Metode ensemble bekerja paling baik ketika para predictor seindependen mungkin satu sama lain, karena mereka cenderung membuat jenis kesalahan yang berbeda.
+
+Jika semua classifier dapat memperkirakan probabilitas kelas (memiliki metode predict_proba()), Anda dapat menggunakan soft voting. Ini menghitung rata-rata probabilitas kelas dari semua classifier dan memilih kelas dengan probabilitas tertinggi. Soft voting seringkali mencapai kinerja yang lebih tinggi karena memberikan bobot lebih pada suara yang sangat meyakinkan.
+
+2. Bagging dan Pasting
+
+Pendekatan lain adalah menggunakan algoritma pelatihan yang sama untuk setiap predictor, tetapi melatih mereka pada subset acak yang berbeda dari set pelatihan.
+
+    Bagging (Bootstrap Aggregating): Pengambilan sampel dilakukan dengan penggantian (with replacement).
+    Pasting: Pengambilan sampel dilakukan tanpa penggantian (without replacement).
+
+Setelah semua predictor dilatih, ensemble membuat prediksi dengan menggabungkan prediksi dari semua predictor (biasanya menggunakan modus statistik untuk klasifikasi atau rata-rata untuk regresi). Metode ini mengurangi varians dari model akhir.
+ut-of-Bag (oob) Evaluation
+Dengan bagging, beberapa instance mungkin tidak pernah terpilih untuk pelatihan oleh predictor tertentu. Instance ini disebut out-of-bag (oob). Kita bisa menggunakan instance oob ini untuk mengevaluasi kinerja ensemble tanpa memerlukan validation set terpisah.
+3. Random Forests
+
+Random Forest adalah ensemble dari Decision Trees, yang umumnya dilatih melalui metode bagging. Scikit-Learn menyediakan kelas RandomForestClassifier yang lebih nyaman dan dioptimalkan.
+
+Algoritma Random Forest memperkenalkan keacakan ekstra saat menumbuhkan pohon: alih-alih mencari fitur terbaik saat membagi sebuah node, ia mencari fitur terbaik di antara subset acak dari fitur. Ini menghasilkan pohon yang lebih beragam, yang menukar bias yang lebih tinggi dengan varians yang lebih rendah, sehingga menghasilkan model keseluruhan yang lebih baik.
+
+Feature Importance
+Salah satu kualitas hebat Random Forests adalah kemudahannya dalam mengukur pentingnya relatif setiap fitur. Scikit-Learn menghitung skor ini secara otomatis setelah pelatihan.
+4. Boosting
+
+Boosting mengacu pada metode Ensemble yang dapat menggabungkan beberapa weak learners (pembelajar lemah) menjadi satu strong learner (pembelajar kuat). Ide umumnya adalah melatih predictor secara berurutan, di mana setiap predictor mencoba memperbaiki pendahulunya.
+
+AdaBoost (Adaptive Boosting)
+Metode ini berfokus pada instance pelatihan yang kurang pas (underfitted) oleh predictor sebelumnya. Algoritma ini meningkatkan bobot relatif dari instance yang salah diklasifikasikan, lalu melatih classifier kedua menggunakan bobot yang diperbarui, dan seterusnya.
+Gradient Boosting
+Metode ini bekerja dengan mencoba menyesuaikan predictor baru dengan residual errors (kesalahan sisa) yang dibuat oleh predictor sebelumnya.
+
+Hyperparameter learning_rate menskalakan kontribusi setiap pohon. Mengaturnya ke nilai rendah akan membutuhkan lebih banyak pohon tetapi biasanya akan menggeneralisasi lebih baik. Ini adalah teknik regularisasi yang disebut shrinkage. Untuk menemukan jumlah pohon yang optimal, Anda dapat menggunakan early stopping.
+5. Stacking
+
+Stacking (kependekan dari stacked generalization) didasarkan pada ide sederhana: daripada menggunakan fungsi sepele (seperti voting) untuk menggabungkan prediksi, mengapa kita tidak melatih sebuah model untuk melakukan agregasi ini? Model terakhir ini disebut blender (atau meta learner).
+
+Prosesnya adalah sebagai berikut:
+
+    Set pelatihan dibagi menjadi dua subset. Subset pertama digunakan untuk melatih predictor di lapisan pertama.
+    Predictor lapisan pertama kemudian digunakan untuk membuat prediksi pada subset kedua (yang ditahan).
+    Prediksi-prediksi ini kemudian digunakan sebagai fitur input untuk melatih blender.
+
+Scikit-Learn tidak mendukung stacking secara langsung, tetapi dapat diimplementasikan secara manual.

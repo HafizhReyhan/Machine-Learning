@@ -1,0 +1,49 @@
+Chapter 9
+
+1. Clustering
+
+Clustering adalah tugas mengidentifikasi instance-instance yang serupa dan menugaskannya ke dalam cluster atau kelompok. Tidak seperti klasifikasi, clustering adalah tugas unsupervised.
+
+Aplikasi Clustering: 
+
+    Segmentasi Pelanggan: Mengelompokkan pelanggan berdasarkan perilaku pembelian mereka. 
+
+Analisis Data: Menjalankan algoritma clustering pada dataset baru, lalu menganalisis setiap cluster secara terpisah.
+Pengurangan Dimensi: Mengganti vektor fitur setiap instance dengan vektor afinitas clusternya.
+Deteksi Anomali: Instance dengan afinitas rendah ke semua cluster kemungkinan besar merupakan anomali.
+Semi-Supervised Learning: Jika Anda hanya memiliki sedikit label, Anda bisa melakukan clustering dan menyebarkan label ke semua instance dalam cluster yang sama.
+Segmentasi Gambar: Mengelompokkan piksel berdasarkan warnanya.
+
+K-Means
+K-Means adalah algoritma sederhana yang mampu mengelompokkan dataset dengan sangat cepat dan efisien.  Anda harus menentukan jumlah cluster (k) yang harus ditemukan oleh algoritma. 
+
+Menemukan Jumlah Cluster yang Optimal
+
+    Metode Elbow (Inersia): Inersia adalah jarak kuadrat rata-rata antara setiap instance dan centroid terdekatnya. Kita dapat memplot inersia sebagai fungsi dari jumlah cluster k. Kurva tersebut seringkali memiliki titik belok yang disebut "siku" (elbow). Nilai k di siku seringkali merupakan pilihan yang baik. 
+
+Silhouette Score: Metrik yang lebih tepat adalah silhouette score, yaitu rata-rata silhouette coefficient dari semua instance. Koefisien ini mengukur seberapa baik sebuah instance berada di dalam clusternya sendiri dan jauh dari cluster lain. Nilainya berkisar dari -1 hingga +1. Semakin tinggi skornya, semakin baik.
+Batasan K-Means
+K-Means tidak bekerja dengan baik ketika cluster memiliki ukuran yang bervariasi, kepadatan yang berbeda, atau bentuk non-sferis.  Penting untuk menskalakan fitur input sebelum menjalankan K-Means. 
+
+DBSCAN
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise) mendefinisikan cluster sebagai wilayah kontinu dengan kepadatan tinggi. 
+
+    Ia menghitung berapa banyak instance yang berada dalam jarak kecil ε (epsilon) dari setiap instance. 
+
+Instance dianggap sebagai core instance jika memiliki setidaknya min_samples instance dalam lingkungan ε-nya.
+Semua instance dalam lingkungan core instance termasuk dalam cluster yang sama.
+Setiap instance yang bukan core instance dan tidak memiliki satu pun di lingkungannya dianggap sebagai anomali.
+DBSCAN bekerja dengan baik jika semua cluster cukup padat dan dipisahkan dengan baik oleh wilayah berkepadatan rendah.
+
+2. Gaussian Mixtures (GMM)
+
+Gaussian Mixture Model (GMM) adalah model probabilistik yang mengasumsikan bahwa instance-instance dihasilkan dari campuran beberapa distribusi Gaussian.  Setiap cluster dapat memiliki bentuk elipsoid, ukuran, kepadatan, dan orientasi yang berbeda. 
+
+Kelas GaussianMixture dari Scikit-Learn menggunakan algoritma Expectation-Maximization (EM), yang memiliki banyak kesamaan dengan K-Means tetapi lebih fleksibel. 
+GMM untuk Deteksi Anomali
+GMM dapat digunakan untuk deteksi anomali.  Setiap instance yang terletak di wilayah berkepadatan rendah dapat dianggap sebagai anomali.  Anda perlu mendefinisikan ambang batas kepadatan yang ingin digunakan. 
+
+Memilih Jumlah Cluster
+Untuk memilih jumlah cluster, Anda dapat mencoba menemukan model yang meminimalkan kriteria informasi teoretis, seperti Bayesian Information Criterion (BIC) atau Akaike Information Criterion (AIC). 
+Bayesian Gaussian Mixture Models
+Sebagai alternatif, Anda bisa menggunakan kelas BayesianGaussianMixture. Model ini secara otomatis dapat memberikan bobot mendekati nol pada cluster yang tidak perlu, sehingga secara efektif memilih jumlah cluster yang optimal. 

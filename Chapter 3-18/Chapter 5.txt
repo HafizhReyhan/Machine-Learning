@@ -1,0 +1,44 @@
+Chapter 5
+
+1. Klasifikasi SVM Linear
+
+Ide dasar di balik SVM adalah mencoba memasang "jalan" terlebar di antara kelas-kelas. Ini disebut klasifikasi margin besar (large margin classification). Garis solid pada gambar di bawah ini mewakili decision boundary dari classifier SVM; ia tidak hanya memisahkan kedua kelas, tetapi juga berada sejauh mungkin dari instance pelatihan terdekat. 
+
+Support Vectors
+Instance yang terletak di tepi "jalan" disebut support vectors. Mereka adalah titik-titik data yang sepenuhnya menentukan decision boundary. Menambahkan lebih banyak instance pelatihan "di luar jalan" tidak akan memengaruhi decision boundary sama sekali. 
+
+Soft Margin vs. Hard Margin Classification
+
+    Hard Margin: Mengharuskan semua instance berada di luar jalan dan di sisi yang benar. Ini hanya berfungsi jika data dapat dipisahkan secara linear dan sangat sensitif terhadap outlier. 
+
+Soft Margin: Mencari keseimbangan antara menjaga jalan selebar mungkin dan membatasi margin violations (yaitu, instance yang berakhir di tengah jalan atau bahkan di sisi yang salah).
+
+Keseimbangan ini dikendalikan oleh hyperparameter C. Nilai C yang lebih rendah menghasilkan jalan yang lebih lebar tetapi lebih banyak margin violations. Nilai C yang lebih tinggi menghasilkan lebih sedikit margin violations tetapi margin yang lebih sempit. Jika model SVM Anda overfitting, Anda bisa mencoba meregularisasikannya dengan mengurangi C. 
+2. Klasifikasi SVM Non-linear
+
+Banyak dataset tidak dapat dipisahkan secara linear. Salah satu pendekatannya adalah dengan menambahkan lebih banyak fitur, seperti fitur polinomial.
+
+Fitur Polinomial dan Kernel Trick
+Menambahkan fitur polinomial secara manual bisa jadi sulit: pada derajat polinomial yang rendah, metode ini tidak dapat menangani dataset yang sangat kompleks, dan pada derajat yang tinggi, ia menciptakan sejumlah besar fitur yang membuat model menjadi lambat. 
+
+Untungnya, saat menggunakan SVM, Anda dapat menerapkan teknik matematika yang disebut kernel trick. Teknik ini memungkinkan Anda mendapatkan hasil yang sama seolah-olah Anda menambahkan banyak fitur polinomial tanpa benar-benar harus menambahkannya. 
+
+Kernel Gaussian RBF
+Teknik lain untuk menangani masalah non-linear adalah dengan menambahkan fitur yang dihitung menggunakan similarity function. Ini mengukur seberapa besar kemiripan setiap instance dengan landmark tertentu. Sekali lagi, kernel trick dapat melakukan keajaibannya, memungkinkan untuk mendapatkan hasil yang sama seolah-olah Anda telah menambahkan banyak fitur similaritas.
+
+Hyperparameter gamma (γ) bertindak seperti hyperparameter regularisasi: jika model Anda overfitting, Anda harus menguranginya; jika underfitting, Anda harus meningkatkannya. 
+
+Aturan Praktis Memilih Kernel:
+Selalu coba kernel linear terlebih dahulu (LinearSVC jauh lebih cepat daripada SVC(kernel="linear")), terutama jika set pelatihan sangat besar. Jika set pelatihan tidak terlalu besar, coba juga kernel Gaussian RBF; ia bekerja dengan baik dalam banyak kasus. 
+
+3. Regresi SVM
+
+SVM juga dapat digunakan untuk regresi. Triknya adalah membalikkan tujuannya: alih-alih mencoba memasang jalan terlebar di antara dua kelas, regresi SVM mencoba memasang sebanyak mungkin instance di dalam jalan sambil membatasi margin violations (instance di luar jalan). 
+
+Lebar jalan dikendalikan oleh hyperparameter epsilon (ϵ).
+4. "Di Balik Layar" (Under the Hood)
+
+    Fungsi Keputusan: Classifier SVM linear membuat prediksi dengan menghitung fungsi keputusan wT⋅x+b. Jika hasilnya positif, kelas yang diprediksi adalah kelas positif (1), jika tidak maka kelas negatif (0). 
+
+Tujuan Pelatihan: Tujuannya adalah untuk memaksimalkan margin. Ini dapat dicapai dengan meminimalkan norma dari vektor bobot ∣∣w∣∣. Semakin kecil vektor bobot w, semakin besar marginnya.
+Dual Problem: Untuk masalah optimisasi terkendala (seperti SVM), dimungkinkan untuk mengekspresikan masalah yang berbeda namun terkait erat yang disebut dual problem. Menyelesaikan dual problem memungkinkan penggunaan kernel trick dan seringkali lebih cepat ketika jumlah instance pelatihan lebih kecil dari jumlah fitur. 

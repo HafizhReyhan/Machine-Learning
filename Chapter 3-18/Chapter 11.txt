@@ -1,0 +1,58 @@
+Chapter 11
+
+1. Masalah Vanishing/Exploding Gradients
+
+Seperti yang dibahas sebelumnya, algoritma backpropagation bekerja dengan menyebarkan gradien error dari lapisan output ke lapisan input. Sayangnya, gradien seringkali menjadi semakin kecil saat algoritma bergerak ke lapisan bawah. Akibatnya, bobot koneksi lapisan bawah hampir tidak berubah, dan pelatihan tidak pernah konvergen ke solusi yang baik. Ini disebut masalah vanishing gradients. Sebaliknya, gradien bisa menjadi semakin besar, menyebabkan pembaruan bobot yang sangat besar dan membuat algoritma menjadi tidak stabil. Ini disebut masalah exploding gradients.
+
+Inisialisasi Glorot dan He
+Untuk mengatasi masalah ini, Glorot dan Bengio mengusulkan bahwa kita memerlukan varians output dari setiap lapisan agar sama dengan varians inputnya.  Mereka menyarankan strategi inisialisasi bobot yang sekarang dikenal sebagai inisialisasi Xavier atau inisialisasi Glorot.  Strategi inisialisasi yang serupa untuk fungsi aktivasi ReLU disebut inisialisasi He. 
+
+Secara default, Keras menggunakan inisialisasi Glorot dengan distribusi uniform. Anda dapat mengubahnya menjadi inisialisasi He saat membuat sebuah layer.
+
+Fungsi Aktivasi Nonsaturating
+Salah satu wawasan dari paper Glorot dan Bengio adalah bahwa gradien yang tidak stabil sebagian disebabkan oleh pilihan fungsi aktivasi yang buruk. Fungsi seperti ReLU dan variannya (Leaky ReLU, ELU, SELU) bekerja jauh lebih baik di jaringan saraf dalam karena mereka tidak mengalami saturasi untuk nilai positif.
+
+    Leaky ReLU: Sedikit "bocor" di bawah z < 0, yang memastikan neuron tidak pernah "mati". 
+
+ELU (Exponential Linear Unit): Mengambil nilai negatif, yang memungkinkan unit memiliki output rata-rata lebih dekat ke 0 dan membantu meringankan masalah vanishing gradients.
+SELU (Scaled ELU): Varian dari ELU yang, di bawah kondisi tertentu (jaringan sekuensial, inisialisasi LeCun, input standar), memastikan jaringan melakukan self-normalize, yang memecahkan masalah vanishing/exploding gradients.
+Batch Normalization (BN)
+Teknik ini menambahkan sebuah operasi di dalam model, tepat sebelum atau sesudah fungsi aktivasi dari setiap hidden layer. Operasi ini menormalkan setiap input (zero-center dan normalisasi), lalu menskalakan dan menggeser hasilnya.  Hal ini sangat mengurangi masalah vanishing/exploding gradients.
+
+Batch Normalization juga bertindak sebagai regularizer, mengurangi kebutuhan akan teknik regularisasi lainnya.
+
+Gradient Clipping
+Teknik populer lainnya untuk mengatasi exploding gradients adalah dengan "memotong" gradien selama backpropagation agar tidak pernah melebihi ambang batas tertentu.
+2. Menggunakan Kembali Lapisan Pretrained (Transfer Learning)
+
+Daripada melatih DNN yang sangat besar dari awal, lebih baik mencoba mencari jaringan saraf yang sudah ada yang menyelesaikan tugas serupa, lalu menggunakan kembali lapisan bawahnya. Teknik ini disebut transfer learning.  Ini akan mempercepat pelatihan secara signifikan dan membutuhkan data pelatihan yang jauh lebih sedikit.
+
+Proses Transfer Learning:
+
+    Beban model A yang sudah dilatih sebelumnya.
+    Buat model B baru berdasarkan lapisan-lapisan model A, tetapi ganti lapisan outputnya.
+    Bekukan lapisan-lapisan yang digunakan kembali (freeze) dengan mengatur layer.trainable = False.
+    Latih model B untuk beberapa epoch.
+    Buka kembali lapisan-lapisan yang dibekukan (unfreeze), kurangi learning rate, dan lanjutkan pelatihan untuk menyempurnakan (fine-tune) bobot yang digunakan kembali.
+
+3. Optimizer yang Lebih Cepat
+
+Menggunakan optimizer yang lebih cepat dari Gradient Descent biasa dapat memberikan peningkatan kecepatan yang besar.
+
+    Momentum Optimization: Menambahkan momentum vector yang mengakumulasi gradien sebelumnya, membantu mempercepat konvergensi. 
+
+Nesterov Accelerated Gradient (NAG): Varian dari momentum yang sedikit lebih cepat dengan mengukur gradien sedikit di depan arah momentum.
+AdaGrad: Mengadaptasi learning rate, menurunkannya lebih cepat untuk dimensi yang curam. Cenderung berhenti terlalu dini.
+RMSProp: Memperbaiki masalah AdaGrad dengan hanya mengakumulasi gradien dari iterasi terbaru.
+Adam (Adaptive Moment Estimation): Menggabungkan ide momentum dan RMSProp. Seringkali menjadi pilihan default yang baik.
+4. Learning Rate Scheduling
+
+Menemukan learning rate yang baik sangat penting. Alih-alih menggunakan learning rate konstan, kita bisa menguranginya seiring berjalannya pelatihan. Strategi ini disebut learning schedules.  Beberapa yang populer adalah power scheduling, exponential scheduling, piecewise constant scheduling, dan 1cycle scheduling.
+5. Menghindari Overfitting dengan Regularisasi
+
+DNN yang besar sangat rentan terhadap overfitting.
+
+    Regularisasi L1​ dan L2​: Sama seperti pada model linear, kita bisa membatasi bobot koneksi jaringan. 
+
+Dropout: Salah satu teknik regularisasi paling populer. Pada setiap langkah pelatihan, setiap neuron (kecuali neuron output) memiliki probabilitas p untuk "dijatuhkan" (diabaikan) sementara. Ini memaksa neuron lain untuk belajar menjadi lebih berguna secara mandiri.
+Max-Norm Regularization: Untuk setiap neuron, teknik ini membatasi bobot koneksi masuknya agar norma L2​ mereka tidak melebihi hyperparameter r. 

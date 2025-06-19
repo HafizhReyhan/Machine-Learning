@@ -1,0 +1,59 @@
+Chapter 10
+
+1. Dari Neuron Biologis ke Buatan
+
+ANNs terinspirasi oleh jaringan neuron biologis yang ditemukan di otak kita. Meskipun terinspirasi oleh alam, ANNs telah berevolusi menjadi sangat berbeda dari sepupu biologisnya.
+
+Perceptron
+Perceptron adalah salah satu arsitektur ANN paling sederhana, ditemukan pada tahun 1957 oleh Frank Rosenblatt. Ia didasarkan pada neuron buatan yang disebut threshold logic unit (TLU). TLU menghitung jumlah berbobot dari inputnya, lalu menerapkan step function pada jumlah tersebut untuk menghasilkan output.
+
+Sebuah Perceptron terdiri dari satu lapisan TLU, di mana setiap TLU terhubung ke semua input. Lapisan seperti ini disebut fully connected layer atau dense layer. Algoritma pembelajaran Perceptron memperkuat koneksi yang membantu mengurangi kesalahan.
+
+Namun, Perceptron memiliki kelemahan serius: mereka tidak mampu menyelesaikan beberapa masalah sepele, seperti masalah klasifikasi Exclusive OR (XOR). Keterbatasan ini dapat diatasi dengan menumpuk beberapa Perceptron, yang menghasilkan Multilayer Perceptron (MLP).
+
+2. Multilayer Perceptron (MLP) dan Backpropagation
+
+MLP terdiri dari satu lapisan input, satu atau lebih lapisan TLU yang disebut hidden layers, dan satu lapisan TLU terakhir yang disebut output layer. Ketika sebuah ANN berisi tumpukan hidden layers yang dalam, ia disebut deep neural network (DNN).
+
+MLP dilatih menggunakan algoritma backpropagation. Secara singkat, ini adalah Gradient Descent yang menggunakan teknik efisien untuk menghitung gradien secara otomatis. Prosesnya adalah sebagai berikut:
+
+    Forward Pass: Mini-batch data dilewatkan melalui jaringan dari lapisan input ke output. Output dari setiap lapisan dihitung dan diteruskan ke lapisan berikutnya.
+    Mengukur Error: Algoritma mengukur error output jaringan menggunakan loss function.
+    Backward Pass: Algoritma menghitung seberapa besar kontribusi setiap koneksi terhadap error, bekerja secara mundur dari lapisan output ke input.
+    Gradient Descent Step: Algoritma menyesuaikan bobot koneksi untuk mengurangi error.
+
+Agar backpropagation berfungsi, step function diganti dengan fungsi aktivasi non-linear seperti fungsi logistik (sigmoid), hyperbolic tangent (tanh), atau yang paling populer saat ini, Rectified Linear Unit (ReLU).
+
+3. Implementasi MLP dengan Keras
+
+Keras adalah API Deep Learning tingkat tinggi yang memungkinkan kita membangun, melatih, mengevaluasi, dan menjalankan jaringan saraf dengan mudah. Kita akan menggunakan implementasi Keras dari TensorFlow, yaitu tf.keras.
+
+Membangun Image Classifier dengan Sequential API
+Kita akan menggunakan dataset Fashion MNIST. Keras menyediakan fungsi utilitas untuk memuatnya.
+Membuat Model dengan Sequential API
+API Sequential adalah jenis model Keras yang paling sederhana, untuk jaringan saraf yang hanya terdiri dari tumpukan lapisan tunggal yang terhubung secara berurutan.Mengompilasi Model
+Setelah model dibuat, kita harus memanggil metode compile() untuk menentukan loss function dan optimizer.Melatih dan Mengevaluasi Model
+Untuk melatih model, kita panggil metode fit().
+4. Membangun Model Kompleks dengan Functional API
+
+Untuk arsitektur jaringan yang tidak sekuensial, seperti jaringan Wide & Deep, kita dapat menggunakan Functional API. Arsitektur ini menghubungkan semua atau sebagian input langsung ke lapisan output, memungkinkan jaringan untuk mempelajari pola yang dalam dan aturan yang sederhana.
+
+Functional API juga memungkinkan penanganan multi-input dan multi-output dengan mudah.
+5. Menyimpan dan Memulihkan Model
+
+Menyimpan model Keras yang telah dilatih sangatlah mudah.
+Python
+6. Menggunakan Callbacks
+
+Callbacks adalah objek yang dapat Anda berikan ke metode fit() yang akan dipanggil oleh Keras pada awal dan akhir pelatihan, setiap epoch, atau bahkan sebelum dan sesudah memproses setiap batch.
+
+    ModelCheckpoint: Menyimpan checkpoint model Anda secara berkala selama pelatihan.
+    EarlyStopping: Menghentikan pelatihan ketika tidak ada kemajuan yang terukur pada validation set selama beberapa epoch.
+
+7. Fine-Tuning Hyperparameter
+
+Fleksibilitas jaringan saraf juga merupakan salah satu kelemahannya: ada banyak hyperparameter yang perlu disetel.
+
+    Jumlah Hidden Layers: Untuk masalah kompleks, jaringan yang dalam (deep networks) memiliki efisiensi parameter yang jauh lebih tinggi daripada yang dangkal (shallow). Mulailah dengan satu atau dua lapisan, lalu tingkatkan hingga model mulai overfitting.
+    Jumlah Neuron per Hidden Layer: Praktik umum adalah menggunakan jumlah neuron yang sama di semua hidden layer. Pendekatan "stretch pants" seringkali efektif: pilih model yang lebih besar dari yang Anda butuhkan, lalu gunakan early stopping atau teknik regularisasi lainnya untuk mencegah overfitting.
+    Learning Rate, Batch Size, dll: Learning rate adalah hyperparameter yang paling penting. Optimizer yang lebih baik (seperti Adam atau Nadam, dibahas di Chapter 11) dan ukuran batch yang tepat juga sangat memengaruhi kinerja.

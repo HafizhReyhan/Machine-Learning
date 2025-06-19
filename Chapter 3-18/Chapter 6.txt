@@ -1,0 +1,64 @@
+Chapter 6
+
+1. Melatih dan Memvisualisasikan Decision Tree
+
+Mari kita bangun sebuah Decision Tree dan lihat cara kerjanya. Kode berikut melatih DecisionTreeClassifier pada dataset iris.
+
+2. Membuat Prediksi
+
+Decision Tree membuat prediksi dengan cara yang sangat intuitif. Anda mulai dari root node (node paling atas) dan menjawab pertanyaan yang ada. Berdasarkan jawaban Anda, Anda pindah ke child node berikutnya, dan begitu seterusnya hingga Anda mencapai leaf node (node yang tidak memiliki child). Kelas yang diprediksi adalah kelas yang ada di leaf node tersebut.
+
+    samples: Menghitung berapa banyak instance pelatihan yang berlaku untuk node tersebut. 
+
+value: Memberi tahu berapa banyak instance pelatihan dari setiap kelas yang berlaku untuk node ini.
+gini: Mengukur impurity (ketidakmurnian) sebuah node. Node dianggap "murni" (gini=0) jika semua instance pelatihan yang berlaku padanya berasal dari kelas yang sama.
+
+Persamaan Gini Impurity:
+Gi​=1−k=1∑n​pi,k2​
+Di mana pi,k​ adalah rasio instance kelas k di antara instance pelatihan di node ke-i.
+
+Model Interpretation: White Box vs. Black Box
+Decision Trees dianggap sebagai model white box. Mereka intuitif, dan keputusan mereka mudah ditafsirkan. Sebaliknya, Random Forests atau neural networks umumnya dianggap model black box, karena sulit untuk menjelaskan dengan istilah sederhana mengapa prediksi tertentu dibuat. 
+
+3. Estimasi Probabilitas Kelas
+
+Decision Tree juga dapat memperkirakan probabilitas bahwa sebuah instance termasuk dalam kelas k tertentu. Ia melintasi pohon untuk menemukan leaf node untuk instance tersebut, lalu mengembalikan rasio instance pelatihan dari kelas k di node tersebut.
+Python
+
+4. Algoritma Pelatihan CART
+
+Scikit-Learn menggunakan algoritma Classification and Regression Tree (CART) untuk melatih Decision Trees.
+
+    Algoritma ini bekerja dengan membagi set pelatihan menjadi dua subset menggunakan satu fitur k dan sebuah threshold tk​.
+    Ia mencari pasangan (k,tk​) yang menghasilkan subset paling murni (diukur dengan Gini impurity atau entropy).
+    Proses ini diulang secara rekursif hingga mencapai kedalaman maksimum atau jika tidak dapat menemukan pembagian yang akan mengurangi impurity.
+
+Algoritma CART adalah greedy algorithm: ia secara serakah mencari pemisahan optimal di tingkat atas, lalu mengulangi proses di setiap tingkat berikutnya. Ia tidak memeriksa apakah pemisahan tersebut akan menghasilkan impurity terendah beberapa tingkat di bawahnya. Menemukan pohon yang optimal adalah masalah NP-Complete, jadi kita harus puas dengan solusi yang "cukup baik". 
+5. Hyperparameter Regularisasi
+
+Decision Trees memiliki sedikit asumsi tentang data pelatihan. Jika tidak dibatasi, struktur pohon akan sangat menyesuaikan diri dengan data pelatihan, kemungkinan besar overfitting. Untuk menghindari ini, kita perlu membatasi kebebasan Decision Tree selama pelatihan melalui regularisasi.
+
+Beberapa hyperparameter regularisasi yang umum adalah:
+
+    max_depth: Kedalaman maksimum pohon. Menguranginya akan meregularisasi model. 
+
+min_samples_split: Jumlah minimum sampel yang harus dimiliki sebuah node sebelum dapat dibagi.
+min_samples_leaf: Jumlah minimum sampel yang harus dimiliki sebuah leaf node.
+max_leaf_nodes: Jumlah maksimum leaf node.
+max_features: Jumlah maksimum fitur yang dievaluasi untuk pemisahan di setiap node.
+
+Meningkatkan hyperparameter min_* atau mengurangi max_* akan meregularisasi model.
+
+6. Regresi dengan Decision Tree
+
+Decision Trees juga mampu melakukan tugas regresi. Alih-alih memprediksi kelas di setiap node, ia memprediksi sebuah nilai. Nilai prediksi ini adalah nilai target rata-rata dari instance di leaf node tersebut. 
+
+Algoritma CART untuk regresi bekerja dengan cara yang sama, tetapi alih-alih mencoba meminimalkan impurity, ia mencoba membagi set pelatihan dengan cara yang meminimalkan MSE (Mean Squared Error). 
+. Instabilitas (Kelemahan)
+
+Decision Trees memiliki beberapa keterbatasan:
+
+    Sensitif terhadap Rotasi Data: Decision Trees menyukai decision boundaries ortogonal (tegak lurus terhadap sumbu), yang membuatnya sensitif terhadap rotasi data.
+    Sensitif terhadap Variasi Kecil dalam Data: Decision Trees sangat sensitif terhadap variasi kecil dalam data pelatihan. Menghapus satu instance saja dapat menghasilkan pohon yang sangat berbeda.
+
+Random Forests dapat membatasi instabilitas ini dengan merata-ratakan prediksi dari banyak pohon, yang akan kita bahas di chapter berikutnya. 

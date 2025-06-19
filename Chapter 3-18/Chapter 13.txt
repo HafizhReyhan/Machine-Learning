@@ -1,0 +1,49 @@
+Chapter 13
+
+Sistem Deep Learning seringkali dilatih pada dataset yang sangat besar yang tidak muat dalam RAM. Memasukkan dan memproses dataset besar secara efisien bisa jadi rumit. Untungnya, TensorFlow membuat hal ini menjadi mudah berkat Data API. Chapter ini akan membahas Data API, format TFRecord, cara membuat layer preprocessing kustom, dan beberapa proyek terkait dari ekosistem TensorFlow.
+1. Data API (tf.data)
+
+Seluruh Data API berpusat pada konsep dataset, yang mewakili urutan item data.
+Transformasi Berantai (Chaining Transformations)
+Setelah memiliki dataset, kita dapat menerapkan berbagai macam transformasi padanya dengan memanggil metode-metode transformasinya. Setiap metode mengembalikan dataset baru, sehingga kita bisa merantainya.
+
+    map(): Menerapkan fungsi ke setiap item. Ini adalah tempat Anda akan melakukan sebagian besar preprocessing.
+    shuffle(): Mengacak instance. Ini mengisi buffer dengan item pertama dari dataset sumber, lalu setiap kali diminta item, ia akan menarik satu secara acak dari buffer dan menggantinya dengan yang baru dari sumber.
+    batch(): Mengelompokkan item ke dalam batch dengan ukuran tertentu.
+    prefetch(): Membuat dataset yang akan selalu berusaha satu batch di depan. Saat algoritma pelatihan sedang bekerja pada satu batch, dataset akan sudah bekerja secara paralel untuk menyiapkan batch berikutnya. Ini dapat meningkatkan kinerja secara dramatis.
+
+Membaca dari Banyak File CSV
+Untuk dataset besar, praktik yang baik adalah membaginya menjadi banyak file. Data API dapat membaca dari beberapa file secara paralel.
+Menggunakan Dataset dengan tf.keras
+Setelah pipeline data siap, kita bisa meneruskannya langsung ke metode fit() Keras.
+
+2. Format TFRecord
+
+TFRecord adalah format pilihan TensorFlow untuk menyimpan data dalam jumlah besar dan membacanya secara efisien. Ini adalah format biner sederhana yang berisi urutan rekaman biner dengan ukuran bervariasi.
+
+Membuat File TFRecord
+Anda dapat dengan mudah membuat file TFRecord menggunakan tf.io.TFRecordWriter.
+
+Protocol Buffers (Protobufs)
+Meskipun setiap rekaman dapat menggunakan format biner apa pun, file TFRecord biasanya berisi protocol buffers yang diserialisasi. Protobuf utama yang digunakan adalah Example, yang mewakili satu instance dalam dataset. Ia berisi daftar fitur bernama, di mana setiap fitur dapat berupa daftar byte string, float, atau integer.
+
+Memuat dan Mem-parsing Example
+Untuk memuat protobuf Example yang diserialisasi, kita menggunakan tf.data.TFRecordDataset dan mem-parsing setiap Example menggunakan tf.io.parse_single_example().
+
+3. Preprocessing Fitur Input
+
+Menyiapkan data untuk jaringan saraf memerlukan konversi semua fitur menjadi fitur numerik dan umumnya menormalkannya. Ini bisa dilakukan di dalam model menggunakan preprocessing layers.
+
+Encoding Fitur Kategorikal
+
+    One-Hot Vectors: Untuk fitur dengan sedikit kategori, kita bisa menggunakan one-hot encoding. Ini melibatkan pembuatan lookup table untuk memetakan setiap kategori ke indeksnya, lalu mengubah indeks tersebut menjadi vektor one-hot.
+
+Embeddings: Untuk fitur dengan banyak kategori, akan lebih efisien jika menggunakan embeddings. Embedding adalah vektor padat (dense vector) yang dapat dilatih yang mewakili sebuah kategori. Jaringan akan belajar representasi yang berguna selama pelatihan. Keras menyediakan keras.layers.Embedding untuk ini.
+
+Keras Preprocessing Layers
+Tim TensorFlow sedang mengerjakan serangkaian layer preprocessing Keras standar (seperti Normalization, TextVectorization, Discretization) yang mengikuti pola adapt()-lalu-gunakan, membuatnya sangat mudah untuk melakukan preprocessing di dalam model.
+
+4. TF Transform dan TensorFlow Datasets (TFDS)
+
+    TF Transform (tf.Transform): Bagian dari TensorFlow Extended (TFX), ini memungkinkan Anda mendefinisikan fungsi preprocessing satu kali yang dapat dijalankan dalam mode batch pada seluruh set pelatihan Anda sebelum pelatihan (untuk mempercepatnya), dan kemudian diekspor ke TF Function dan dimasukkan ke dalam model Anda yang telah dilatih. Ini menghindari masalah training/serving skew.
+    TensorFlow Datasets (TFDS): Proyek ini sangat memudahkan pengunduhan dataset umum (dari MNIST hingga ImageNet). Cukup panggil tfds.load() dan ia akan mengunduh data dan mengembalikannya sebagai objek dataset tf.data yang siap digunakan.

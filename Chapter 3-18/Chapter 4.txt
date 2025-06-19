@@ -1,0 +1,56 @@
+Chapter 4
+1. Regresi Linear (Linear Regression)
+
+Model regresi linear membuat prediksi dengan menghitung jumlah berbobot dari fitur-fitur input, ditambah sebuah konstanta yang disebut bias term.
+
+Persamaan Prediksi Model Regresi Linear:
+y^​=θ0​+θ1​x1​+θ2​x2​+⋯+θn​xn​
+
+    y^​ adalah nilai prediksi.
+    n adalah jumlah fitur.
+    xi​ adalah nilai fitur ke-i.
+    θj​ adalah parameter model ke-j.
+
+Untuk melatih model Regresi Linear, kita perlu menemukan nilai parameter θ yang meminimalkan cost function. Ukuran kinerja yang paling umum untuk model regresi adalah Root Mean Square Error (RMSE). Dalam praktiknya, lebih sederhana untuk meminimalkan Mean Squared Error (MSE), dan ini akan menghasilkan hasil yang sama.
+
+The Normal Equation
+Normal Equation adalah solusi matematis (closed-form) yang secara langsung memberikan nilai θ yang meminimalkan cost function.
+
+Persamaan Normal:
+θ^=(XTX)−1XTy
+
+Contoh Kode menggunakan Normal Equation:
+Pertama, kita buat data yang terlihat linear.
+
+Gradient Descent (GD)
+Gradient Descent adalah algoritma optimisasi generik yang bekerja dengan menyesuaikan parameter secara iteratif untuk meminimalkan cost function.
+
+    Learning Rate: Parameter penting dalam GD adalah ukuran langkah, yang ditentukan oleh learning rate. Jika terlalu kecil, algoritma akan memakan waktu lama. Jika terlalu besar, algoritma bisa melompati lembah dan gagal menemukan solusi yang baik.
+    Jenis-jenis Gradient Descent:
+        Batch Gradient Descent: Menggunakan seluruh set pelatihan untuk menghitung gradien di setiap langkah. Ini sangat lambat pada dataset yang besar.
+        Stochastic Gradient Descent (SGD): Memilih satu instance acak dari set pelatihan di setiap langkah dan menghitung gradien hanya berdasarkan instance tunggal tersebut. Jauh lebih cepat tetapi kurang stabil.
+        Mini-batch Gradient Descent: Menghitung gradien pada set acak kecil dari instance yang disebut mini-batch. Ini merupakan kompromi antara Batch GD dan SGD.
+
+2. Regresi Polinomial (Polynomial Regression)
+
+Jika data Anda lebih kompleks dari garis lurus, Anda dapat menggunakan model linear untuk menyesuaikan data non-linear dengan menambahkan pangkat dari setiap fitur sebagai fitur baru.
+3. Kurva Pembelajaran (Learning Curves)
+
+Learning curves adalah plot kinerja model pada training set dan validation set sebagai fungsi dari ukuran training set. Kurva ini membantu kita mengetahui apakah model kita overfitting atau underfitting.
+
+    Underfitting: Jika kedua kurva (pelatihan dan validasi) mencapai dataran tinggi (plateau), datar, dan cukup tinggi, model tersebut kemungkinan besar underfitting.
+    Overfitting: Jika ada celah yang signifikan antara kurva pelatihan dan validasi, ini adalah ciri khas dari model yang overfitting.
+
+4. Model Linear yang Diregularisasi
+
+Cara yang baik untuk mengurangi overfitting adalah dengan meregularisasi model (yaitu, membatasinya).
+
+    Ridge Regression (L2​ Regularization): Menambahkan regularization term ke cost function yang memaksa bobot model sekecil mungkin. Ini membantu mengurangi varians model.
+    Lasso Regression (L1​ Regularization): Menggunakan norma L1​ dari vektor bobot. Ini cenderung menghilangkan bobot dari fitur yang paling tidak penting (mengaturnya menjadi nol), sehingga secara otomatis melakukan pemilihan fitur.
+    Elastic Net: Merupakan jalan tengah antara Ridge dan Lasso Regression, dengan menggabungkan regularization term dari keduanya.
+    Early Stopping: Cara lain untuk meregularisasi adalah dengan menghentikan pelatihan segera setelah validation error mencapai minimum.
+
+5. Regresi Logistik dan Regresi Softmax
+
+    Regresi Logistik (Logistic Regression): Digunakan untuk memperkirakan probabilitas bahwa sebuah instance termasuk dalam kelas tertentu, menjadikannya binary classifier. Ia menggunakan logistic (sigmoid) function untuk menghasilkan output antara 0 dan 1.
+    Regresi Softmax (Softmax Regression): Merupakan generalisasi dari Regresi Logistik yang mendukung banyak kelas secara langsung (multiclass classification). Ia menghitung skor untuk setiap kelas dan kemudian menerapkan softmax function untuk mengubah skor tersebut menjadi probabilitas.

@@ -1,0 +1,39 @@
+Chapter 8
+1. Kutukan Dimensionalitas (The Curse of Dimensionality)
+
+Curse of dimensionality mengacu pada fakta bahwa banyak hal berperilaku sangat berbeda di ruang berdimensi tinggi. Misalnya, di ruang berdimensi tinggi, sebagian besar data pelatihan kemungkinan besar akan berjauhan satu sama lain, membuat dataset menjadi sangat renggang (sparse). Hal ini membuat prediksi menjadi kurang andal karena didasarkan pada ekstrapolasi yang jauh lebih besar, dan juga meningkatkan risiko overfitting.
+2. Pendekatan Utama untuk Pengurangan Dimensi
+
+Ada dua pendekatan utama untuk mengurangi dimensi: proyeksi dan Manifold Learning.
+
+Proyeksi (Projection)
+Dalam kebanyakan masalah dunia nyata, instance pelatihan tidak tersebar secara seragam di semua dimensi. Sebaliknya, semua instance pelatihan terletak di dalam (atau dekat dengan) subspace berdimensi jauh lebih rendah. Proyeksi bekerja dengan memproyeksikan setiap instance pelatihan secara tegak lurus ke subspace ini.
+
+Manifold Learning
+Banyak algoritma pengurangan dimensi bekerja dengan memodelkan manifold di mana instance pelatihan berada. Ini disebut Manifold Learning. Metode ini mengandalkan asumsi manifold (manifold assumption), yang menyatakan bahwa sebagian besar dataset berdimensi tinggi di dunia nyata terletak dekat dengan manifold berdimensi jauh lebih rendah. Contoh klasiknya adalah dataset "Swiss roll", di mana data 2D ditekuk dan dipelintir dalam ruang 3D. Manifold Learning mencoba untuk "membuka gulungan" manifold ini.
+3. PCA (Principal Component Analysis)
+
+PCA adalah algoritma pengurangan dimensi yang paling populer. Ia bekerja dengan mengidentifikasi hyperplane yang terletak paling dekat dengan data, lalu memproyeksikan data ke atasnya.
+
+PCA memilih sumbu yang mempertahankan jumlah varians terbesar dalam set pelatihan. Sumbu-sumbu ini disebut principal components (PC). Untuk menemukan PC, PCA menggunakan teknik dekomposisi matriks standar yang disebut Singular Value Decomposition (SVD).
+Explained Variance Ratio
+Rasio varians yang dijelaskan (explained variance ratio) dari setiap komponen utama menunjukkan proporsi varians dataset yang terletak di sepanjang setiap komponen utama. Ini berguna untuk memilih jumlah dimensi yang tepat.PCA untuk Kompresi
+Setelah pengurangan dimensi, dataset memakan lebih sedikit ruang. Dimungkinkan juga untuk mendekompresi dataset kembali ke dimensi aslinya dengan menerapkan transformasi terbalik, meskipun akan ada sedikit kehilangan informasi (reconstruction error).
+
+Varian PCA:
+
+    Incremental PCA (IPCA): Berguna untuk dataset besar yang tidak muat dalam memori atau untuk tugas online. Data dibagi menjadi mini-batch dan diumpankan ke algoritma IPCA satu per satu.
+    Randomized PCA: Algoritma stokastik yang dengan cepat menemukan aproksimasi komponen utama. Jauh lebih cepat daripada SVD penuh ketika jumlah dimensi target jauh lebih kecil daripada jumlah dimensi awal.
+
+4. Kernel PCA (kPCA)
+
+Seperti yang dibahas di Chapter 5, kernel trick adalah teknik matematika yang secara implisit memetakan instance ke ruang berdimensi sangat tinggi, memungkinkan klasifikasi non-linear. Trik yang sama dapat diterapkan pada PCA, yang disebut Kernel PCA (kPCA). Ini memungkinkan proyeksi non-linear yang kompleks untuk pengurangan dimensi.
+5. LLE (Locally Linear Embedding)
+
+LLE adalah teknik pengurangan dimensi non-linear kuat lainnya. Ini adalah teknik Manifold Learning yang tidak bergantung pada proyeksi. LLE bekerja dengan mengukur bagaimana setiap instance pelatihan berhubungan secara linear dengan tetangga terdekatnya, lalu mencari representasi berdimensi rendah di mana hubungan-hubungan lokal ini paling terjaga.
+6. Teknik Pengurangan Dimensi Lainnya
+
+    Multidimensional Scaling (MDS): Mengurangi dimensi sambil mencoba mempertahankan jarak antara instance.
+    Isomap: Membuat grafik dengan menghubungkan setiap instance ke tetangga terdekatnya, lalu mengurangi dimensi sambil mencoba mempertahankan jarak geodesik.
+    t-Distributed Stochastic Neighbor Embedding (t-SNE): Mengurangi dimensi sambil mencoba menjaga instance serupa tetap dekat dan instance yang tidak serupa tetap jauh. Sebagian besar digunakan untuk visualisasi.
+    Linear Discriminant Analysis (LDA): Merupakan algoritma klasifikasi, tetapi selama pelatihan ia mempelajari sumbu yang paling diskriminatif antar kelas. Sumbu-sumbu ini kemudian dapat digunakan untuk memproyeksikan data.

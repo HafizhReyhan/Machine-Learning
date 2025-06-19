@@ -1,0 +1,65 @@
+Chapter 12
+
+1. Tur Singkat TensorFlow
+
+TensorFlow adalah library yang kuat untuk komputasi numerik, sangat cocok untuk Machine Learning skala besar. Fitur utamanya meliputi:
+
+    Mirip dengan NumPy, tetapi dengan dukungan GPU.
+    Mendukung komputasi terdistribusi.
+    Termasuk just-in-time (JIT) compiler yang mengoptimalkan komputasi untuk kecepatan dan penggunaan memori.
+    Menerapkan autodiff (diferensiasi otomatis) dan menyediakan optimizer yang sangat baik.
+
+2. Menggunakan TensorFlow seperti NumPy
+
+API TensorFlow berpusat pada tensor, yang mengalir dari satu operasi ke operasi lainnya. Tensor sangat mirip dengan ndarray NumPy.
+Tensor dan NumPy
+Tensor dapat berinteraksi dengan baik dengan NumPy. Anda dapat membuat tensor dari array NumPy, dan sebaliknya.Penting: NumPy menggunakan presisi 64-bit secara default, sementara TensorFlow menggunakan 32-bit. Saat membuat tensor dari array NumPy, seringkali lebih baik untuk mengatur dtype=tf.float32.Variabel
+Nilai tf.Tensor tidak dapat diubah (immutable). Untuk bobot dalam jaringan saraf yang perlu diubah oleh backpropagation, kita memerlukan tf.Variable.
+3. Menyesuaikan Model dan Algoritma Pelatihan
+
+Fungsi Loss Kustom
+Seringkali kita perlu membuat fungsi loss sendiri. Misalnya, Huber loss. Kita bisa mengimplementasikannya sebagai fungsi Python sederhana yang menggunakan operasi TensorFlow.
+
+Untuk menyimpan hyperparameter bersama model, kita harus membuat subclass dari kelas keras.losses.Loss dan mengimplementasikan metode get_config().
+
+Metrik Kustom
+Mendefinisikan fungsi metrik kustom hampir sama dengan fungsi loss. Namun, untuk metrik yang tidak bisa dirata-ratakan di setiap batch (seperti precision atau recall), kita perlu membuat streaming metric dengan membuat subclass dari keras.metrics.Metric dan mengimplementasikan metode __init__(), update_state(), dan result().
+
+Layer Kustom
+Jika kita membutuhkan layer yang eksotis, kita bisa membuatnya sendiri.
+
+    Layer Stateless: Cara termudah adalah membungkus fungsi Python dalam keras.layers.Lambda.
+    Layer Stateful (dengan bobot): Kita perlu membuat subclass dari keras.layers.Layer dan mengimplementasikan metode __init__(), build() (untuk membuat bobot layer), dan call() (untuk melakukan operasi).
+
+Model Kustom
+Untuk arsitektur yang sangat kompleks (misalnya, dengan loop atau koneksi skip), kita dapat membuat subclass dari keras.Model. Kita mendefinisikan layer di konstruktor (__init__) dan menentukan bagaimana data mengalir melaluinya di metode call().
+4. Menghitung Gradien dengan Autodiff
+
+TensorFlow membuat diferensiasi otomatis menjadi sangat sederhana dengan tf.GradientTape.
+
+    tf.GradientTape secara otomatis merekam setiap operasi yang melibatkan sebuah variabel.
+    Metode gradient() pada tape kemudian dapat digunakan untuk menghitung gradien dari suatu hasil terhadap variabel-variabel tersebut.
+
+Metode ini sangat efisien dan merupakan inti dari backpropagation di Keras.
+5. Loop Pelatihan Kustom
+
+Dalam kasus yang jarang terjadi di mana metode fit() tidak cukup fleksibel (misalnya, jika Anda ingin menggunakan optimizer yang berbeda untuk bagian yang berbeda dari jaringan), Anda perlu menulis training loop kustom.
+
+Langkah-langkah Loop Pelatihan Kustom:
+
+    Siapkan optimizer, loss function, dan metrik.
+    Buat loop untuk setiap epoch.
+    Di dalam loop epoch, buat loop untuk setiap batch data.
+    Di dalam tf.GradientTape(): a. Buat prediksi untuk batch tersebut. b. Hitung loss antara prediksi dan label asli.
+    Gunakan tape untuk menghitung gradien dari loss terhadap variabel yang dapat dilatih.
+    Terapkan gradien tersebut ke optimizer untuk melakukan satu langkah Gradient Descent.
+    Perbarui metrik dan tampilkan kemajuan.
+    Reset metrik di akhir setiap epoch.
+
+Menulis loop kustom memberikan kontrol penuh tetapi juga membuat kode lebih panjang dan rentan terhadap kesalahan.
+6. Fungsi dan Graph TensorFlow
+
+Untuk meningkatkan kinerja, TensorFlow dapat mengubah fungsi Python menjadi computation graph yang sangat dioptimalkan. Ini dilakukan dengan menggunakan decorator @tf.function.
+Tracing: Saat @tf.function dipanggil pertama kali dengan tipe dan bentuk input tertentu, ia akan "menelusuri" (trace) eksekusi fungsi dan membangun computation graph.
+AutoGraph: Fitur ini secara otomatis mengubah pernyataan alur kontrol Python (seperti if, for, while) menjadi operasi TensorFlow yang sesuai (seperti tf.cond, tf.while_loop).
+Aturan: Agar dapat dikonversi, fungsi harus sebisa mungkin hanya menggunakan operasi TensorFlow. Panggilan ke library eksternal (seperti NumPy) atau kode Python dengan efek samping (seperti print()) hanya akan berjalan selama proses tracing, tidak setiap kali fungsi dipanggil.

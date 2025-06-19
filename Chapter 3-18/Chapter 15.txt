@@ -1,0 +1,74 @@
+Chapter 15
+
+1. Neuron dan Lapisan Recurrent
+
+Tidak seperti feedforward neural network, RNN memiliki koneksi yang menunjuk ke belakang.
+
+    Neuron Recurrent: Pada setiap langkah waktu (time step) t, neuron recurrent menerima input x(t)​ dan outputnya sendiri dari langkah waktu sebelumnya, y(t−1)​.
+    Lapisan Neuron Recurrent: Setiap neuron dalam lapisan menerima vektor input x(t)​ dan vektor output dari seluruh lapisan dari langkah waktu sebelumnya, y(t−1)​. 
+
+    Memory Cell: Bagian dari jaringan saraf yang menyimpan beberapa keadaan (state) di setiap langkah waktu disebut memory cell. Neuron recurrent sederhana adalah contoh sel yang sangat dasar. Keadaan sel pada langkah waktu t, yang dinotasikan dengan h(t)​ (hidden state), adalah fungsi dari keadaan sebelumnya h(t−1)​ dan input saat ini x(t)​.
+
+Arsitektur Input dan Output
+RNN dapat memiliki berbagai arsitektur, termasuk:
+
+    Sequence-to-sequence: Menerima urutan input dan menghasilkan urutan output. Berguna untuk peramalan time series.
+    Sequence-to-vector: Menerima urutan input dan hanya menghasilkan satu output di akhir. Berguna untuk klasifikasi sentimen, di mana inputnya adalah ulasan dan outputnya adalah skor sentimen.
+    Vector-to-sequence: Menerima satu vektor input yang sama di setiap langkah waktu dan menghasilkan urutan output. Berguna untuk tugas seperti image captioning.
+    Encoder–Decoder: Arsitektur seq-to-vector (encoder) yang diikuti oleh arsitektur vector-to-seq (decoder). Berguna untuk tugas seperti penerjemahan mesin.
+
+2. Melatih RNN
+
+Untuk melatih RNN, triknya adalah dengan "membuka gulungan" jaringan sepanjang waktu (unroll the network through time), lalu menggunakan backpropagation biasa. Strategi ini disebut Backpropagation Through Time (BPTT). Keras menangani semua kerumitan ini untuk Anda.
+3. Meramalkan Time Series
+
+Kita akan menggunakan RNN untuk meramalkan nilai berikutnya dalam sebuah time series.
+
+Membuat Dataset Time Series
+Pertama, kita siapkan data. X_train akan berisi urutan 50 langkah waktu, dan y_train akan berisi nilai pada langkah waktu ke-51.
+
+Baseline dan RNN Sederhana
+Sebelum menggunakan RNN, ada baiknya kita memiliki metrik dasar.
+
+    Naive forecasting: Memprediksi nilai terakhir dalam setiap seri.
+    Model Linear: Menggunakan Dense layer sederhana. Setelah itu, kita bisa mencoba RNN sederhana dengan satu lapisan SimpleRNN.
+
+Secara default, lapisan recurrent di Keras hanya mengembalikan output terakhir. Untuk membuatnya mengembalikan satu output per langkah waktu, Anda harus mengatur return_sequences=True.
+
+Deep RNNs
+Menumpuk beberapa lapisan sel adalah hal yang umum. Ini memberi Anda Deep RNN.
+
+Penting: Atur return_sequences=True untuk semua lapisan recurrent kecuali yang terakhir jika Anda hanya peduli dengan output terakhir.
+
+Meramalkan Beberapa Langkah Waktu ke Depan
+Ada dua cara utama:
+
+    Gunakan model yang sudah dilatih untuk memprediksi satu langkah ke depan, lalu tambahkan prediksi itu ke input dan ulangi prosesnya. Kesalahan cenderung terakumulasi dengan pendekatan ini.
+    Latih RNN untuk memprediksi semua nilai sekaligus. Ini seringkali bekerja lebih baik. Kita bisa mengubahnya menjadi model sequence-to-sequence dan menggunakan TimeDistributed layer untuk menerapkan Dense layer di setiap langkah waktu.
+
+Dengan melatih model untuk memprediksi di setiap langkah waktu, kita mendapatkan lebih banyak gradien error yang mengalir melalui model, yang menstabilkan dan mempercepat pelatihan.
+4. Menangani Urutan Panjang
+
+RNN dasar memiliki keterbatasan dalam menangani urutan yang panjang.
+
+Mengatasi Masalah Gradien yang Tidak Stabil
+
+    Inisialisasi Parameter yang Baik, Optimizer Cepat, Dropout: Trik yang sama seperti pada DNN biasa dapat digunakan.
+    Fungsi Aktivasi Saturating: Menggunakan fungsi aktivasi seperti tanh (default di SimpleRNN) dapat membantu mencegah gradien meledak.
+    Layer Normalization: Normalisasi ini bekerja lebih baik dengan RNN daripada Batch Normalization. Ia menormalkan di sepanjang dimensi fitur, bukan dimensi batch.
+    Gradient Clipping: Membatasi nilai gradien selama backpropagation.
+
+Mengatasi Masalah Memori Jangka Pendek
+
+Karena transformasi data, beberapa informasi hilang di setiap langkah waktu. Setelah beberapa saat, keadaan RNN hampir tidak memiliki jejak dari input pertama. Untuk mengatasi ini, sel dengan memori jangka panjang telah diperkenalkan.
+
+    Sel LSTM (Long Short-Term Memory): Diperkenalkan pada tahun 1997, sel LSTM dapat belajar apa yang harus disimpan dalam keadaan jangka panjang (long-term state), apa yang harus dibuang, dan apa yang harus dibaca darinya. Ia menggunakan tiga gerbang (gates) untuk mengontrol aliran informasi: forget gate, input gate, dan output gate. 
+
+Sel GRU (Gated Recurrent Unit): Versi yang lebih sederhana dari sel LSTM dan tampaknya berkinerja sama baiknya. Ia menggabungkan vektor keadaan menjadi satu dan hanya menggunakan dua gerbang.
+
+5. Menggunakan Lapisan Konvolusi 1D untuk Memproses Urutan
+
+Untuk menangani urutan yang sangat panjang (lebih dari 100 langkah waktu), kita bisa menggunakan lapisan konvolusi 1D untuk melakukan downsampling pada urutan input. Ini membantu lapisan GRU atau LSTM mendeteksi pola jangka panjang.
+
+WaveNet
+Arsitektur ini menumpuk lapisan konvolusi 1D, dengan menggandakan dilation rate di setiap lapisan. Ini memungkinkan lapisan bawah untuk mempelajari pola jangka pendek, sementara lapisan atas mempelajari pola jangka panjang. Berkat ini, WaveNet dapat memproses urutan yang sangat panjang dengan sangat efisien, seringkali mengungguli arsitektur berbasis RNN.
